@@ -86,7 +86,7 @@ When you upload a new safety configuration to the robot it needs to be enabled. 
 
 Once Sunrise Workbench is provisioned, you'll need to configure the
 system which will communicate directly with the KONI interface.  This
-system must be configured for the IP address 192.170.10.200 (netmask
+system must be configured for the IP address 192.170.10.100 (netmask
 /24, or 255.255.255.0) (this can be changed in the Java applications).
 KUKA recommends directly attaching the computer to the KONI port
 instead of using a switch.  Some network interfaces (particularly some
@@ -99,21 +99,19 @@ turn the key switch back. Choose either "DrakeFRITorqueDriver" or
 button on the left sidebar of the SmartPad.
 
 Next, build the driver program to communicate with the iiwa arm using
-FRI, and with the controlling application using LCM.  Compiling this
-project will output a single program in the build directory called
-"kuka_driver".  Running it with no arguments will connect to the IIWA
+FRI, and with the controlling application using LCM.  To build, from 
+`drake-iiwa-driver`,
+```
+sudo apt install catkin
+mkdir build && cd build
+cmake ../
+make
+```
+
+Compiling this project will output a single program in the `build/bin` directory
+called "kuka_driver".  Running it with no arguments will connect to the IIWA
 at it's default address and port (192.170.10.2, port 30200), negotiate
 LCM into the command state, and report the IIWA status via LCM.
-
-This repository is configured with a private git submodule for the
-KUKA FRI source code.  If you do not have access to that repository,
-you will need to install your own version of the FRI source:
-
-```
-cd kuka-fri
-unzip /path/to/your/copy/of/FRI-Client-SDK_Cpp.zip
-patch -p1 < ../fri_udp_connection_file_descriptor.diff
-```
 
 The patch above applies correctly to the FRI 1.7 and 1.11 source.
 Other versions have not been tested.
