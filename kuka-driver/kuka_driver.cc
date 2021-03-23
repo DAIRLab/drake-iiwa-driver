@@ -438,13 +438,16 @@ class KukaFRIClient : public KUKA::FRI::LBRClient {
     double pos[kNumJoints] = { 0., 0., 0., 0., 0., 0., 0.};
     const bool command_valid =
         lcm_client_->GetPositionCommand(robot_id_, pos);
+    std::cout << "inhibit_motion_in_command_state_: " << inhibit_motion_in_command_state_ << std::endl;
     if (inhibit_motion_in_command_state_ || !command_valid) {
       // No command received, just command the position when we
       // entered command state.
+      std::cout << "NO COMMAND RECEIVED: REPEATING INITIAL VALUE" << std::endl;
       assert(joint_position_when_command_entered_.size() == kNumJoints);
       memcpy(pos, joint_position_when_command_entered_.data(),
              kNumJoints * sizeof(double));
     } else {
+      std::cout << "COMMAND RECEIVED" << std::endl;
       // Only apply the joint limits when we're responding to LCM.  If
       // we don't want to command motion, don't change anything.
       ApplyJointLimits(pos);
